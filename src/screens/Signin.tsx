@@ -50,7 +50,12 @@ export function SigIn(){
             </Text>
        </Center>
       
-       <Button title="Criar conta" variant="outline"/>
+       <Button 
+        title="Criar conta" 
+        variant="outline" 
+        onPress={() => navigation.navigate("SignUp")}
+        mt={12}
+        />
         </VStack>
     </ScrollView>    
     );

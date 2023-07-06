@@ -26,6 +26,7 @@ export function Home() {
             <HomeHeader />
             <FlatList
                 mt={10}
+                minH={10}
                 maxH={10}
                 mb={10}
                 horizontal

@@ -10,7 +10,7 @@ export function HomeHeader(){
             <UserPhoto size={16} source={{uri:"https://media.seudinheiro.com/uploads/2023/01/Blazer-EV-foto-Chevrolet.jpg"}} alt="Imagem do usuario"/>
             <VStack flex={1}>
                 <Text color="gray.100" fontSize="md">Olá</Text>
-                <Heading color="gray.100" fontSize="md">Lorenzo</Heading>
+                <Heading color="gray.100" fontSize="md" fontFamily="heading">Lorenzo</Heading>
             </VStack>
 
             <TouchableOpacity>
