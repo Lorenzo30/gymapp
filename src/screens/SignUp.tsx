@@ -43,8 +43,6 @@ export function SignUp() {
             email,
             password
         })
-
-        console.log(response.data);
     }
 
     return (
