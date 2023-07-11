@@ -1,4 +1,4 @@
-import { VStack, Image, Text, Center, Heading, ScrollView } from "native-base";
+import { VStack, Image, Text, Center, Heading, ScrollView,useToast } from "native-base";
 import { api } from "@services/api";
 
 import LogoSvg from "@assets/logo.svg"
@@ -8,41 +8,55 @@ import { Button } from "@components/Button";
 import { TextBase } from "react-native";
 import { useForm, Controller } from "react-hook-form"
 
-import {yupResolver} from "@hookform/resolvers/yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 import { useNavigation } from "@react-navigation/native";
 
 import * as yup from "yup";
+import axios from "axios";
+import { AppError } from "@utils/AppError";
 
 type FormDataProps = {
-    name:string,
-    email:string,
-    password:string,
-    password_confirm:string
+    name: string,
+    email: string,
+    password: string,
+    password_confirm: string
 }
 
 const signUpSchema = yup.object({
-name:yup.string().required("Informe o nome"),
-email:yup.string().required("Primeiro informe o email").email("Email inválido"),
-password:yup.string().required("Informe a senha").min(6,"A senha deve ter pelo menos 6 digitos"),
-password_confirm:yup.string().required("Informe a confirmação de senha").oneOf([yup.ref('password')],"A confirmação da senha não confere")
+    name: yup.string().required("Informe o nome"),
+    email: yup.string().required("Primeiro informe o email").email("Email inválido"),
+    password: yup.string().required("Informe a senha").min(6, "A senha deve ter pelo menos 6 digitos"),
+    password_confirm: yup.string().required("Informe a confirmação de senha").oneOf([yup.ref('password')], "A confirmação da senha não confere")
 })
 
 export function SignUp() {
     const navigation = useNavigation();
-    const { control,handleSubmit,formState:{errors} } = useForm<FormDataProps>({
-        resolver:yupResolver(signUpSchema)
+    const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
+        resolver: yupResolver(signUpSchema)
     });
+
+    const toast = useToast();
 
     function handleGoBack() {
         navigation.goBack();
     }
 
-    async function handleSignUp({name,email,password}:FormDataProps) {
-        const response = await api.post("/users",{
-            name,
-            email,
-            password
-        })
+    async function handleSignUp({ name, email, password }: FormDataProps) {
+        try {
+            await api.post("/users", {
+                name,
+                email,
+                password
+            });
+        } catch (error) {
+           const isAppError = error instanceof AppError
+           const title = isAppError ? error.message : 'Erro no servidor tente novamente mais tarde!';
+           toast.show({
+              title,
+              placement:"top",
+              bgColor:"red.500"
+           });
+        }
     }
 
     return (
@@ -126,10 +140,10 @@ export function SignUp() {
                     )}
                 />
 
-                <Button 
-                    title="Criar conta" 
-                    variant="outline"   
-                    onPress={handleSubmit(handleSignUp)}  
+                <Button
+                    title="Criar conta"
+                    variant="outline"
+                    onPress={handleSubmit(handleSignUp)}
                 />
             </VStack>
         </ScrollView>
