@@ -3,6 +3,7 @@ import { SigIn } from "@screens/Signin";
 import { SignUp } from "@screens/SignUp";
 
 
+
 type AuthRoutes =  {
 signIn:undefined,
 SignUp:undefined
