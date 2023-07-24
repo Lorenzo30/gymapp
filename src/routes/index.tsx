@@ -6,11 +6,12 @@ import { AuthRoutes } from "./Auth.routes";
 
 import { AppRoutes } from "./App.routes";
 import { AuthContext } from "@contexts/AuthContext";
+import { useAuth } from "@hooks/useAuth";
 
 export function Routes() {
 
-    const contextData = useContext(AuthContext);
-    console.log("Contexto => ",contextData);
+    const {user} = useAuth();
+    console.log("Contexto => ",user);
 
     const { colors } = useTheme();
     const theme = DefaultTheme;
