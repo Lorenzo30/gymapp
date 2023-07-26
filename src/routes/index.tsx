@@ -7,19 +7,24 @@ import { AuthRoutes } from "./Auth.routes";
 import { AppRoutes } from "./App.routes";
 import { AuthContext } from "@contexts/AuthContext";
 import { useAuth } from "@hooks/useAuth";
+import { Loading } from "@components/Loading";
 
 export function Routes() {
-
-    const {user} = useAuth();
-    console.log("Contexto => ",user);
+    const {user,isLoadingUserStorageData} = useAuth();
 
     const { colors } = useTheme();
     const theme = DefaultTheme;
     theme.colors.background = colors.gray[700];
 
+    if (isLoadingUserStorageData) {
+        return (
+            <Loading />
+        )
+    }
+
     return (
         <NavigationContainer theme={theme}>
-                <AuthRoutes />
+               {user.id ? <AppRoutes /> : <AuthRoutes />}
         </NavigationContainer>
     );
 }
