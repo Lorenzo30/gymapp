@@ -1,3 +1,5 @@
+
+import { useState } from "react";
 import { VStack, Image, Text, Center, Heading, ScrollView,useToast } from "native-base";
 import { api } from "@services/api";
 
@@ -14,6 +16,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as yup from "yup";
 import axios from "axios";
 import { AppError } from "@utils/AppError";
+import { useAuth} from "@hooks/useAuth";
+import { SigIn } from "./Signin";
 
 type FormDataProps = {
     name: string,
@@ -31,24 +35,30 @@ const signUpSchema = yup.object({
 
 export function SignUp() {
     const navigation = useNavigation();
+    const [isLoading,setIsLoading] = useState(false);
+
     const { control, handleSubmit, formState: { errors } } = useForm<FormDataProps>({
         resolver: yupResolver(signUpSchema)
     });
 
     const toast = useToast();
+    const {signIn} = useAuth();
 
     function handleGoBack() {
         navigation.goBack();
     }
 
     async function handleSignUp({ name, email, password }: FormDataProps) {
+        setIsLoading(true);
         try {
             await api.post("/users", {
                 name,
                 email,
                 password
             });
+            await signIn(email,password);
         } catch (error) {
+           setIsLoading(false);
            const isAppError = error instanceof AppError
            const title = isAppError ? error.message : 'Erro no servidor tente novamente mais tarde!';
            toast.show({
@@ -144,6 +154,7 @@ export function SignUp() {
                     title="Criar conta"
                     variant="outline"
                     onPress={handleSubmit(handleSignUp)}
+                    isLoading={isLoading}
                 />
             </VStack>
         </ScrollView>
