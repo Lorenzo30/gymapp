@@ -17,6 +17,7 @@ export function Group({ name,isActive, ...rest }: Props) {
             alignItems="center"
             overflow="hidden"
             isPressed={isActive}
+            {...rest}
             _pressed={{borderColor:"green.500",borderWidth:1}}
         >
             <Text
