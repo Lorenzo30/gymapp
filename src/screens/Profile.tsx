@@ -4,7 +4,7 @@ import { ScreenHeader } from "@components/ScreenHeader";
 import { UserPhoto } from "@components/UserPhoto";
 import { Center, ScrollView, VStack, Skeleton, Text, Heading, Alert, useToast, Container } from "native-base";
 import { TouchableOpacity } from "react-native";
-import { useState } from "react"
+import { useCallback, useState } from "react"
 
 import * as yup from "yup"
 import { Controller, useForm } from "react-hook-form";
@@ -17,6 +17,7 @@ import { useAuth } from "@hooks/useAuth";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { api } from "@services/api";
 import { AppError } from "@utils/AppError";
+import { useFocusEffect } from "@react-navigation/native";
 
 type FormDataProps = {
     name: string,
@@ -54,6 +55,12 @@ export function Profile() {
         },
         resolver: yupResolver(profileSchema)
     });
+
+   
+
+    useFocusEffect(useCallback(() => {
+        //setUserPhoto(`${api.defaults.baseURL}/avatar/${user.avatar}`);
+    }, []))
 
     async function handleProfileUpdate(data: FormDataProps) {
         setIsLoading(true);
@@ -132,7 +139,7 @@ export function Profile() {
                     const userUpdated = user;
                     userUpdated.avatar = avatarUpdatedResponse.data.avatar;
                     updateUserProfile(userUpdated)
-
+                    setUserPhoto(`${api.defaults.baseURL}/avatar/${userUpdated.avatar}`);
                     toast.show({
                         title: "Foto atualizada",
                         placement: "top",
